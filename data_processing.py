@@ -18,7 +18,7 @@ def load_data_from_sqlserver(server, database, table_name, trusted_connection=Tr
 
     try:
         params = urllib.parse.quote_plus(
-            f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+            f"DRIVER={{ODBC Driver 18 for SQL Server}};"
             f"SERVER={server};"
             f"DATABASE={database};"
             f"UID={username};"
