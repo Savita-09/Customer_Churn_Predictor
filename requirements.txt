@@ -12,5 +12,5 @@ langchain
 langchain-community
 langchain-groq
 langgraph
-sqlalchemy == 3.5.0
+sqlalchemy
 xgboost
