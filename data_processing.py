@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 import urllib.parse
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
@@ -10,7 +10,7 @@ warnings.filterwarnings('ignore')
 import pandas as pd
 
 def load_data_from_sqlserver(server, database, table_name, trusted_connection=True, username=None, password=None):
-    """Load data from SQL Server / SSMS"""
+    """Load data from MySQL Server  """
 
     server = server.strip()
     database = database.strip()
@@ -18,14 +18,15 @@ def load_data_from_sqlserver(server, database, table_name, trusted_connection=Tr
 
     try:
         params = urllib.parse.quote_plus(
-            f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+          # f"DRIVER={{ODBC Driver 18 for SQL Server}};"
             f"SERVER={server};"
             f"DATABASE={database};"
             f"UID={username};"
             f"PWD={password};"
             f"TrustServerCertificate=yes;"
-        )
-        engine = create_engine(f"mssql+pyodbc:///?odbc_connect={params}")
+          )
+    
+        engine = create_engine(f"mysql+pymysql://root:helloworld@123@127.0.0.1:3306/customer_data")
         return engine
     except Exception as e:
         return str(e)
