@@ -6,7 +6,7 @@ plotly>=5.17.0
 python-dotenv>=1.0.0
 matplotlib
 seaborn
-pyodbc
+pymysql
 langchain-core
 langchain
 langchain-community
