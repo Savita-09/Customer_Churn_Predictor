@@ -43,7 +43,7 @@ def get_sqlserver_engine(server, database,table, password):
         )
         params = urllib.parse.quote_plus(conn_str)
         # engine = create_engine(f"mysql+pymysql://root:helloworld@123@127.0.0.1:3306/churn_db")
-        engine = create_engine(f"mysql+pymysql://USERNAME:PASSWORD@HOSTNAME:3306/DATABASE")
+        engine = create_engine(f"mysql+pymysql://root:helloworld@localhost:3306/customer_data")
         return engine
     except Exception as e:
         return str(e)
