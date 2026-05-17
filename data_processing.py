@@ -26,7 +26,7 @@ def load_data_from_sqlserver(server, database, table_name, trusted_connection=Tr
             f"TrustServerCertificate=yes;"
           )
     
-        engine = create_engine(f"mysql+pymysql://root:helloworld@123@localhost:3306/customer_data")
+        engine = create_engine(f"mysql+pymysql://root:helloworld@123@127.0.0.1:3306/customer_data")
         return engine
     except Exception as e:
         return str(e)
