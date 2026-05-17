@@ -30,25 +30,26 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
-def get_sqlserver_engine(server, database):
+def get_sqlserver_engine(server, database,table, password):
     try:
         conn_str = (
-            f"DRIVER={{ODBC Driver 18 for SQL Server}};"
+          #  f"DRIVER={{ODBC Driver 18 for SQL Server}};"
             f"SERVER={server};"
             f"DATABASE={database};"
+            f"PASSWORD = {password};"
             f"Trusted_Connection=yes;"
             f"TrustServerCertificate=yes;"
         )
         params = urllib.parse.quote_plus(conn_str)
-        engine = create_engine(f"mssql+pyodbc:///?odbc_connect={params}")
+        # engine = create_engine(f"mysql+pymysql://root:helloworld@123@127.0.0.1:3306/churn_db")
+        engine = create_engine(f"mysql+pymysql://root:helloworld%40123@127.0.0.1:3306/{database}")
         return engine
     except Exception as e:
         return str(e)
 
-def load_data_from_sqlserver(server, database, table):
+def load_data_from_sqlserver(server, database,table, password):
     try:
-        engine = get_sqlserver_engine(server, database)
+        engine = get_sqlserver_engine(server, database,table, password)
 
         if isinstance(engine, str):
             return engine
@@ -56,7 +57,7 @@ def load_data_from_sqlserver(server, database, table):
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
 
-        query = text(f"SELECT * FROM [{table}]")
+        query = text(f"SELECT * FROM {table}")
         df = pd.read_sql(query, engine)
         return df
 
@@ -86,6 +87,7 @@ with st.sidebar.form("db_form"):
     db_host = st.text_input("SQL Server Host", "localhost\\SQLEXPRESS")
     db_name = st.text_input("Database Name", "")   # default fixed
     db_table = st.text_input("Table Name", "")
+    db_pass = st.text_input("Password", "")   # 
 
     connect_btn = st.form_submit_button("Connect & Load Data")
 
@@ -96,6 +98,7 @@ if connect_btn:
             safe_host = db_host.strip()
             safe_db = db_name.strip()
             safe_table = db_table.strip()
+            safe_pass = db_pass.strip()
 
             if not safe_host:
                 st.sidebar.error("❌ SQL Server Host is required.")
@@ -109,8 +112,13 @@ if connect_btn:
                 st.sidebar.error("❌ Table Name is required.")
                 st.stop()
 
+            if not safe_pass:
+                st.sidebar.error("❌ Password is required.")
+                st.stop()
+
+
         
-            engine = get_sqlserver_engine(safe_host, safe_db)
+            engine = get_sqlserver_engine(safe_host, safe_db,safe_table, safe_pass)
 
             if isinstance(engine, str):
                 st.sidebar.error(f"❌ Engine creation failed: {engine}")
@@ -124,7 +132,7 @@ if connect_btn:
                 st.sidebar.error(f"❌ Connection failed: {e}")
                 st.stop()
         
-            result = load_data_from_sqlserver(safe_host, safe_db, safe_table)
+            result = load_data_from_sqlserver(safe_host, safe_db, safe_table,safe_pass)
 
             if isinstance(result, pd.DataFrame):
                 st.session_state.data = result
