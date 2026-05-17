@@ -46,7 +46,6 @@ def load_data(server, username, password, database, table):
         return f"SQL Server error: {str(e)}"
 
 
-
 def standardize_columns(df):
     """Convert column names to lowercase snake_case"""
     df = df.copy()
@@ -83,20 +82,6 @@ def clean_data(df):
 
     return df
 
-    if 'Customer_Status' in df.columns:
-        df['Customer_Status'] = (
-            df['Customer_Status']
-            .astype(str)
-            .str.strip()
-            .str.lower()
-            .map({'yes': 'Yes', 'no': 'No', '1': 'Yes', '0': 'No'})
-        )
-        df['Customer_Status'] = df['Customer_Status'].fillna('No')
-
-    print(f"✅ Cleaned data: {len(df)} rows, {len(df.columns)} columns")
-    return df
-
-
 def preprocess_data(df):
     """
     Return CLEAN DataFrame + target only.
@@ -109,7 +94,7 @@ def preprocess_data(df):
     if 'Customer_Status' not in df.columns:
         raise ValueError("❌ Missing 'Customer_Status' column. Dataset must have churn target.")
 
-    feature_cols = [col for col in df.columns if col not in ['Customer_ID', 'Customer_ID', 'Customer_Status']]
+    feature_cols = [col for col in df.columns if col not in ['Customer_ID', 'Customer_Status','State','Multiple_Lines','Paperless_Billing','Payment_Method','Married','Internet_Service']]
     X = df[feature_cols].copy()
 
     y = df['Customer_Status'].astype(str).map({
@@ -139,7 +124,7 @@ def legacy_preprocess_data(df):
 
     df = clean_data(df)
 
-    X = df.drop(['Customer_ID', 'Customer_Status'], axis=1, errors='ignore')
+    X = df.drop(['Customer_ID', 'Customer_Status','State','Multiple_Lines','Paperless_Billing','Payment_Method','Married','Internet_Service'], axis=1, errors='ignore')
     y = df['Customer_Status'].apply(lambda x: 1 if str(x).lower() == 'Churned' else 0)
 
     cat_cols = X.select_dtypes(include=['object']).columns
@@ -158,4 +143,3 @@ def legacy_preprocess_data(df):
         X[num_cols] = scaler.fit_transform(X[num_cols])
 
     return X, y, encoders, scaler
-
