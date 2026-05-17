@@ -55,7 +55,7 @@ def load_data_from_sqlserver(server, database,table, password):
         if isinstance(engine, str):
             return engine
 
-        with engine.connect('mysql',type = 'sql') as conn:
+        with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
 
         query = text(f"SELECT * FROM {table}")
