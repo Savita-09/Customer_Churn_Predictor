@@ -30,6 +30,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
 def get_sqlserver_engine(server, database,table, password):
     try:
         conn_str = (
@@ -87,7 +88,7 @@ with st.sidebar.form("db_form"):
     db_host = st.text_input("SQL Server Host", "localhost\\SQLEXPRESS")
     db_name = st.text_input("Database Name", "")   # default fixed
     db_table = st.text_input("Table Name", "")
-    db_pass = st.text_input("Password", "")   # 
+    db_pass = st.text_input("Password", "")  
 
     connect_btn = st.form_submit_button("Connect & Load Data")
 
@@ -248,7 +249,6 @@ if page == "Dashboard (EDA)":
                      title="Correlation Matrix of Features")
     c6.plotly_chart(fig6, use_container_width=True)
     
-
 
 elif page == "Model Insights":
    st.title("🤖 Intelligent Churn Predictions")
