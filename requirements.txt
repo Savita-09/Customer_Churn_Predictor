@@ -15,4 +15,3 @@ langgraph
 sqlalchemy
 xgboost
 cryptography
-mysqlclient
